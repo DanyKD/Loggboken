@@ -1,5 +1,6 @@
 # Loggboken
 
+
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +12,7 @@ class MainClass {
             while (looping)
             {
                 Console.Clear();
-                Console.WriteLine("\n\tVälkommen till Loggboken\n\t#########################\n\n\t[1]Skriv nytt inlägg i loggbken\n\t[2]Sök inlägg i loggboken\n\t[3]Skriv ut alla loggar\n\t[4]Avsluta program");
+                Console.WriteLine("\n\tVälkommen till Loggboken\n\t#########################\n\n\t[1]Skriv nytt inlägg i loggbken\n\t[2]Sök inlägg i loggboken\n\t[3]Skriv ut alla loggar\n\t[4]Radera inlägg\n\t[5]Avsluta program");
                 Console.Write("\n\tVälja nummer: ");
                 Int32.TryParse(Console.ReadLine(), out int meny); // Tar emot användarinput för vår meny
                 switch (meny)
@@ -36,6 +37,15 @@ class MainClass {
                         MenyAvslut();
                         break;
                     case 4:
+                        temp=MataInText("titel du vill radera?");
+                        result=LinjärSökning(loggboken,temp);
+                        if(result!=-1)
+                        RederaInlägg(loggboken,result);
+                        else
+                        Console.WriteLine("\n\tKunde inte hitat.");
+                        MenyAvslut();
+                        break;
+                    case 5:
                         looping = false;
                         break;
                     
@@ -96,5 +106,8 @@ class MainClass {
           }
           else
           Console.WriteLine("Listen är tomt.");
+        }
+        static void RederaInlägg(List<String[]> list,int i){
+            list.RemoveAt(i);
         }
 }
