@@ -11,6 +11,8 @@ namespace Loggboken
 {
     class Program
     {
+       //en Bool värde som kommer att användas för se om bubbelsort metoden har utfört bubbelsort 
+        static bool bubblesorted=false;
         static void Main(string[] args)
         {
             // Vektor som innehållar titel, medelande och datum
@@ -25,7 +27,7 @@ namespace Loggboken
             {
                 Console.Clear();
                 //Skriver ut en meny som använder ska val en av dem varje loopen
-                Console.WriteLine("\n\tVälkommen till Loggboken\n\t#########################\n\n\t[1]Skapa nytt inlägg i loggbken\n\t[2]Sök inlägg i loggboken\n\t[3]Skriv ut alla loggar\n\t[4]Redigera inlägg\n\t[5]Radera inlägg\n\t[6]Avsluta program");
+                Console.WriteLine("\n\tVälkommen till Loggboken\n\t#########################\n\n\t[1]Skapa nytt inlägg i loggbken\n\t[2]Sök inlägg i loggboken\n\t[3]Skriv ut alla loggar\n\t[4]Sortering Loggboken\n\t[5]Redigera inlägg\n\t[6]Radera inlägg\n\t[7]Avsluta program");
                 Console.Write("\n\tVälja nummer: ");
                 //Tar emot användarinput för vår meny
                 Int32.TryParse(Console.ReadLine(), out int meny); 
@@ -43,7 +45,8 @@ namespace Loggboken
                         //ber användaren att mata in titel som söka efter
                         String temp = MataInText("titel du vill söka efter?");
                         //Söka efter titeln inom loggboken 
-                        int result = LinjärSökning(loggboken, temp);
+                        //int result = LinjärSökning(loggboken, temp);
+                        int result=BinärSökning(loggboken,temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
                             //skriv ut hittade posten
@@ -59,6 +62,10 @@ namespace Loggboken
                         MenyAvslut();
                         break;
                     case 4:
+                        BubbleSortering(loggboken);
+                        MenyAvslut();
+                        break;
+                    case 5:
                         // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill söka på?");
                         //Söka efter titeln inom loggboken 
@@ -76,7 +83,7 @@ namespace Loggboken
                             Console.WriteLine("\n\tKunde inte hitat.");
                         MenyAvslut();
                         break;
-                    case 5:
+                    case 6:
                          // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill radera?");
                         //Söka efter titeln inom loggboken 
@@ -94,14 +101,11 @@ namespace Loggboken
                             Console.WriteLine("\n\tKunde inte hitat.");
                         MenyAvslut();
                         break;
-                    case 6:
+                    case 7:
                         //Looping false för att lämna slingan
                         looping = false;
                         break;
-                    case 7:
-                    SorteringLoggboken(loggboken);
-                    MenyAvslut();
-                    break;
+                    
         
                 }
             }
@@ -221,7 +225,8 @@ namespace Loggboken
             list[i] = inlägg;
             Console.WriteLine("\n\tInlägget redigerades.");
         }
-        static void SorteringLoggboken(List<String[]> list){
+        static void BubbleSortering(List<String[]> list)
+        {
           // kolla om lista är inte tom
           if(list.Count>0)
           {
@@ -240,14 +245,36 @@ namespace Loggboken
                         }          
               }
             }
+            //bool värdet bubblesorted blir true om denna if sats körs.
+            bubblesorted= true;
           //skriver ut alla inlägg för att visa att de är nu i bokstavsordning efter titel.
-          SkrivutLoggboken(list); 
           }
           // listen är tom
           else
             {
-            Console.WriteLine("\n\tKan EJ sortera eftersom att Loggboken är tom!");
+            Console.WriteLine("\n\tKan inte sortera, loggboken är tom!");
             }
+        }
+        //en metod för att söka efter en text i list av vektor
+        static int BinärSökning(List<String[]> list, string text)
+        {
+          BubbleSortering(list);
+          int minvärde=0;
+          int maxvärde=list.Count-1;
+          while(minvärde<=maxvärde)
+          {
+            int mellanvärde=(minvärde+maxvärde)/2;
+            String[] tmptitel=list[mellanvärde];
+            int tmp=text.CompareTo(tmptitel[0]);
+            if (tmp > 0)
+               minvärde = mellanvärde + 1;
+            else if (tmp < 0)
+               maxvärde = mellanvärde - 1;
+            else
+              return mellanvärde;
+          }
+          return -1;
         }
     }
 }
+
