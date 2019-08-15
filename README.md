@@ -98,7 +98,11 @@ namespace Loggboken
                         //Looping false för att lämna slingan
                         looping = false;
                         break;
-
+                    case 7:
+                    SorteringLoggboken(loggboken);
+                    MenyAvslut();
+                    break;
+        
                 }
             }
         }
@@ -216,6 +220,34 @@ namespace Loggboken
             //Ställa den redigerade posten i listan
             list[i] = inlägg;
             Console.WriteLine("\n\tInlägget redigerades.");
+        }
+        static void SorteringLoggboken(List<String[]> list){
+          // kolla om lista är inte tom
+          if(list.Count>0)
+          {
+            for(int i=0;i<list.Count-1;i++)
+            {
+              for(int index=0;index<list.Count-1-i;index++)
+              {
+                string[] tmptitel1=list[index];
+                string[] tmptitel2=list[index+1];
+                int tmp = tmptitel1[0].CompareTo(tmptitel2[0]);
+                 if (tmp > 0)
+                        {
+                            String[] temp = list[index];
+                            list[index] = list[index + 1];
+                            list[index + 1] = temp;
+                        }          
+              }
+            }
+          //skriver ut alla inlägg för att visa att de är nu i bokstavsordning efter titel.
+          SkrivutLoggboken(list); 
+          }
+          // listen är tom
+          else
+            {
+            Console.WriteLine("\n\tKan EJ sortera eftersom att Loggboken är tom!");
+            }
         }
     }
 }
