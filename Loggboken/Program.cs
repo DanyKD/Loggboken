@@ -8,15 +8,15 @@ namespace Loggboken
 {
     class Program
     {
-        //en Bool värde som kommer att användas för se om bubbelsort metoden har utfört bubbelsort 
-        static bool bubblesorted = false;
+        
+
+        //global Lista som ska innehålla vektor objecktet
+        static List<String[]> Loggboken = new List<String[]>();
+
         static void Main(string[] args)
         {
             // Vektor som innehållar titel, medelande och datum
             String[] inlägg = new String[3];
-
-            //global Lista som ska innehålla vektor objecktet
-            List<String[]> loggboken = new List<String[]>();
 
             //Variabel som kontrollerar loopen för användarval
             bool looping = true;
@@ -33,9 +33,9 @@ namespace Loggboken
                     case 1:
                         //Skappa en ny post och lägga till logboken
                         inlägg = LäggtillInlägg();
-                        LäggtillLoggboken(loggboken, inlägg);
+                        LäggtillLoggboken(inlägg);
                         // Skriv ut loggboken efter updetering
-                        SkrivutLoggboken(loggboken);
+                        SkrivutLoggboken();
                         MenyAvslut();
                         break;
                     case 2:
@@ -43,11 +43,14 @@ namespace Loggboken
                         String temp = MataInText("titel du vill söka efter?");
                         //Söka efter titeln inom loggboken 
                         //int result = LinjärSökning(loggboken, temp);
-                        int result = BinärSökning(loggboken, temp);
+                        int result = BinärSökning(temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
+                        {
+                            Console.WriteLine("\n\tinlägget är hittat");
                             //skriv ut hittade posten
-                            SkrivutInlägg(loggboken, result);
+                            SkrivutInlägg(result);
+                        }
                         else
                             // om det kan inte hitta posten
                             Console.WriteLine("\n\tKunde inte hitat.");
@@ -55,25 +58,26 @@ namespace Loggboken
                         break;
                     case 3:
                         //Skriv ut alla loggar
-                        SkrivutLoggboken(loggboken);
+                        SkrivutLoggboken();
                         MenyAvslut();
                         break;
                     case 4:
-                        BubbleSortering(loggboken);
+                        BubbleSortering();
+                        SkrivutLoggboken();
                         MenyAvslut();
                         break;
                     case 5:
                         // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill söka på?");
                         //Söka efter titeln inom loggboken 
-                        result = LinjärSökning(loggboken, temp);
+                        result = LinjärSökning(temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
                         {
                             //Redigera posten efter hittade i loggboken
-                            RedigeraInlägg(loggboken, result);
+                            RedigeraInlägg(result);
                             //Skriv ut alla loggar
-                            SkrivutLoggboken(loggboken);
+                            SkrivutLoggboken();
                         }
                         else
                             // om det kan inte hitta posten
@@ -84,14 +88,14 @@ namespace Loggboken
                         // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill radera?");
                         //Söka efter titeln inom loggboken 
-                        result = LinjärSökning(loggboken, temp);
+                        result = LinjärSökning(temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
                         {
                             //Redera posten efter hittade i loggboken
-                            RederaInlägg(loggboken, result);
+                            RederaInlägg(result);
                             //Skriv ut alla loggar
-                            SkrivutLoggboken(loggboken);
+                            SkrivutLoggboken();
                         }
                         else
                             // om det kan inte hitta posten
@@ -108,33 +112,39 @@ namespace Loggboken
             }
         }
         //Skriv ut alla loggar genom att lämna loggboken som parameter
-        static void SkrivutLoggboken(List<String[]> loggar)
+        static void SkrivutLoggboken()
         {
             // deklarera item of loggboken som vill skriv ut
             string[] inlägg = new string[3];
-            Console.WriteLine("\n\tLoggboken är:");
-            //loop för att akriv ut alla loggar
-            for (int i = 0; i < loggar.Count; i++)
+            if (Loggboken.Count > 0)
             {
-                //Sätta varje log i loggboken i inlägget genom att slinga 
-                inlägg = loggar[i];
-                //skriv ut inlägget
-                Console.WriteLine("\n\t" + (i + 1) + "- Titel: " + inlägg[0] + ", Meddelande: " + inlägg[1] + ", Datum:" + inlägg[2]);
+                Console.WriteLine("\n\tLoggboken är:");
+                //loop för att akriv ut alla loggar
+                for (int i = 0; i < Loggboken.Count; i++)
+                {
+                    //Sätta varje log i loggboken i inlägget genom att slinga 
+                    inlägg = Loggboken[i];
+                    //skriv ut inlägget
+                    Console.WriteLine("\n\t" + (i + 1) + "- Titel: " + inlägg[0] + ", Meddelande: " + inlägg[1] + ", Datum:" + inlägg[2]);
+                }
             }
+            else Console.WriteLine("\n\tLoggboken är tom.");
         }
-        //Vänta på användarens svar
+        //Vänta på avändarens svar
         static void MenyAvslut()
         {
             Console.WriteLine("\n\tTryck ENTER för att återgå till menyn.");
             Console.ReadLine();
         }
         //Lägga till inlägg i loggboken genom att passera loggboken och inlägg
-        static void LäggtillLoggboken(List<String[]> loggar, String[] inlägg)
+        static void LäggtillLoggboken(String[] inlägg)
         {
             //Kolla om inlägg inte är noll
             if (!inlägg.Equals(null))
+            {
                 //Använd add-funktion för att lägga till inlägg till loggboken
-                loggar.Add(inlägg);
+                Loggboken.Add(inlägg);  
+            }
             else
                 //Om inlägg är noll
                 Console.WriteLine("\n\tDet finns inte inlägg att lägga till!.");
@@ -171,13 +181,13 @@ namespace Loggboken
 
         }
         //en metod för att söka efter en text i list av vektor
-        static int LinjärSökning(List<String[]> list, string text)
+        static int LinjärSökning(string text)
         {
             //en loop för att läsa alla inlägg
-            for (int i = 0; i < list.Count; i++)
+            for (int i = 0; i < Loggboken.Count; i++)
             {
                 //Ställa in element i listan varje gång i posten
-                string[] inlägg = list[i];
+                string[] inlägg = Loggboken[i];
                 //Kolla om varje element i list är lika med texten retrunera 1 eller inte returnera -1  
                 if (inlägg[0].Equals(text.ToUpper()))
 
@@ -186,13 +196,13 @@ namespace Loggboken
             return -1;
         }
         //En metod för att skriva ut inlägg genom att skicka listan över vektor och index för listan
-        static void SkrivutInlägg(List<String[]> list, int i)
+        static void SkrivutInlägg(int i)
         {
             // Kolla om om listan inte är tom
-            if (list.Count != 0)
+            if (Loggboken.Count != 0)
             {
                 //Ställa in elementet i listan i inlägget
-                String[] inlägg = list[i];
+                String[] inlägg = Loggboken[i];
                 //Skriva ut inlägget
                 Console.WriteLine("\n\t" + (i + 1) + "- Titel: " + inlägg[0] + ", Meddelande: " + inlägg[1] + ", Date: " + inlägg[2]);
             }
@@ -201,14 +211,14 @@ namespace Loggboken
                 Console.WriteLine("Listen är tomt.");
         }
         //En metod för att Radera inlägg genom att skicka listan över vektor och index för listan
-        static void RederaInlägg(List<String[]> list, int i)
+        static void RederaInlägg(int i)
         {
             //använda removeat-function för att radera inlägg
-            list.RemoveAt(i);
+            Loggboken.RemoveAt(i);
             Console.WriteLine("\n\tPosten raderades.");
         }
         ////En metod för att Redigera inlägg genom att skicka listan över vektor och index för listan
-        static void RedigeraInlägg(List<String[]> list, int i)
+        static void RedigeraInlägg(int i)
         {
             //ställa in elementet i listan i inlägg
             String[] inlägg = new String[3];
@@ -219,31 +229,30 @@ namespace Loggboken
             //Initiera tredje position i vektor som vara datum
             inlägg[2] = DateTime.Now.ToString("yyyy-MM-dd HH:MM");
             //Ställa den redigerade posten i listan
-            list[i] = inlägg;
+            Loggboken[i] = inlägg;
             Console.WriteLine("\n\tInlägget redigerades.");
         }
-        static void BubbleSortering(List<String[]> list)
+        static void BubbleSortering()
         {
             // kolla om lista är inte tom
-            if (list.Count > 0)
+            if (Loggboken.Count > 0)
             {
-                for (int i = 0; i < list.Count - 1; i++)
+                for (int i = 0; i < Loggboken.Count - 1; i++)
                 {
-                    for (int index = 0; index < list.Count - 1 - i; index++)
+                    for (int index = 0; index < Loggboken.Count - 1 - i; index++)
                     {
-                        string[] tmptitel1 = list[index];
-                        string[] tmptitel2 = list[index + 1];
+                        string[] tmptitel1 = Loggboken[index];
+                        string[] tmptitel2 = Loggboken[index + 1];
                         int tmp = tmptitel1[0].CompareTo(tmptitel2[0]);
                         if (tmp > 0)
                         {
-                            String[] temp = list[index];
-                            list[index] = list[index + 1];
-                            list[index + 1] = temp;
+                            String[] temp = Loggboken[index];
+                            Loggboken[index] = Loggboken[index + 1];
+                            Loggboken[index + 1] = temp;
                         }
                     }
                 }
-                //bool värdet bubblesorted blir true om denna if sats körs.
-                bubblesorted = true;
+                //Console.WriteLine("\n\tLoggboken är sorterad.");
                 //skriver ut alla inlägg för att visa att de är nu i bokstavsordning efter titel.
             }
             // listen är tom
@@ -253,20 +262,20 @@ namespace Loggboken
             }
         }
         //en metod för att söka efter en text i list av vektor
-        static int BinärSökning(List<String[]> list, string text)
+        static int BinärSökning(string text)
         {
             //Sortera listan för att kunna göra en binär sökning
-            BubbleSortering(list);
+            BubbleSortering();
             //Initiera min- och maxvärden är början och slutet på listan
             int minvärde = 0;
-            int maxvärde = list.Count - 1;
+            int maxvärde = Loggboken.Count - 1;
             //Loopen körs så länge minvärde är mindre än maxvärdet
             while (minvärde <= maxvärde)
             {
                 //Initierar int variabel mellanvärdet som är medel mellan min och maxvärdet
                 int mellanvärde = (minvärde + maxvärde) / 2;
                 //Ställa in mittposten i listan i en tillfällig vektor som begreppet binär sökning
-                String[] tmptitel = list[mellanvärde];
+                String[] tmptitel = Loggboken[mellanvärde];
                 //Jämföra användarposten med titeln på mitten av listan
                 //tmp>0 Sökvärdet kommer att vara på andra hälften
                 //tmp<0 sökvärdet kommer att vara på första hälften
