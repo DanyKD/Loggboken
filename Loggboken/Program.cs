@@ -70,7 +70,8 @@ namespace Loggboken
                         // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill söka på?");
                         //Söka efter titeln inom loggboken 
-                        result = LinjärSökning(temp);
+                        //result = LinjärSökning(temp);
+                        result = BinärSökning(temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
                         {
@@ -88,12 +89,13 @@ namespace Loggboken
                         // Ber användaren att skriva i en ny tillfällig titel för att söka efter i loggboken
                         temp = MataInText("titel du vill radera?");
                         //Söka efter titeln inom loggboken 
-                        result = LinjärSökning(temp);
+                        //result = LinjärSökning(temp);
+                        result = BinärSökning(temp);
                         //Returnera -1 om den inte hittade titeln
                         if (result != -1)
                         {
                             //Redera posten efter hittade i loggboken
-                            RederaInlägg(result);
+                            RaderaInlägg(result);
                             //Skriv ut alla loggar
                             SkrivutLoggboken();
                         }
@@ -208,14 +210,14 @@ namespace Loggboken
             }
             else
                 //Om listen är tom
-                Console.WriteLine("Listen är tomt.");
+                Console.WriteLine("Loggboken är tomt.");
         }
         //En metod för att Radera inlägg genom att skicka listan över vektor och index för listan
-        static void RederaInlägg(int i)
+        static void RaderaInlägg(int i)
         {
             //använda removeat-function för att radera inlägg
             Loggboken.RemoveAt(i);
-            Console.WriteLine("\n\tPosten raderades.");
+            Console.WriteLine("\n\tinlägg raderades.");
         }
         ////En metod för att Redigera inlägg genom att skicka listan över vektor och index för listan
         static void RedigeraInlägg(int i)
